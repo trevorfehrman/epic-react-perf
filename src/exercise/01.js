@@ -3,8 +3,8 @@
 
 import * as React from 'react'
 // 💣 remove this import
-import Globe from '../globe'
 
+const Globe = React.lazy(() => import('../globe'))
 // 🐨 use React.lazy to create a Globe component which using a dynamic import
 // to get the Globe component from the '../globe' module.
 
@@ -34,9 +34,11 @@ function App() {
         />
         {' show globe'}
       </label>
-      <div style={{width: 400, height: 400}}>
-        {showGlobe ? <Globe /> : null}
-      </div>
+      <React.Suspense fallback={<div>sup</div>}>
+        <div style={{width: 400, height: 400}}>
+          {showGlobe ? <Globe /> : null}
+        </div>
+      </React.Suspense>
     </div>
   )
 }
