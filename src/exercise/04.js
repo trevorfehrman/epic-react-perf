@@ -3,7 +3,7 @@
 
 import * as React from 'react'
 // 🐨 import the useVirtual hook from react-virtual
-// import {useVirtual} from 'react-virtual'
+import {useVirtual} from 'react-virtual'
 import {useCombobox} from '../use-combobox'
 import {getItems} from '../workerized-filter-cities'
 import {useAsync, useForceRerender} from '../utils'
@@ -24,13 +24,17 @@ function Menu({
   getItemProps,
   highlightedIndex,
   selectedItem,
+  listRef,
+  virtualRows,
+  totalHeight,
   // 🐨 accept listRef, virtualRows, totalHeight
 }) {
   return (
     // 🐨 pass the listRef to the `getMenuProps` prop getter function below:
     // 💰  getMenuProps({ref: listRef})
-    <ul {...getMenuProps()}>
+    <ul {...getMenuProps({ref: listRef})}>
       {/* 🐨 add a li here with an inline style for the height set to the totalHeight */}
+      <li style={{height: totalHeight}}></li>
       {/*
         🦉 this is to ensure that the scrollable area of the <ul /> is the
         same height it would be if we were actually rendering everything
@@ -44,14 +48,14 @@ function Menu({
         - start: this is how many pixels from the scrollTop this item should be
       */}
       {/* 💣 delete the second argument of "index", you can get that from the virtualRow object */}
-      {items.map((item, index) => (
+      {virtualRows.map(item => (
         <ListItem
           key={item.id}
           getItemProps={getItemProps}
           item={item}
-          index={index}
+          index={item.index}
           isSelected={selectedItem?.id === item.id}
-          isHighlighted={highlightedIndex === index}
+          isHighlighted={highlightedIndex === item.index}
           // 🐨 pass a style prop, you can get the inline styles from getVirtualRowStyles()
           // make sure to pass an object with the size (the height of the row)
           // and start (where the row starts relative to the scrollTop of its container).
